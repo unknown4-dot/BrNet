@@ -3,5 +3,6 @@
 
 void getip(char *domain);
 void src(char *url);
+void status(char *url);
 
 #endif
