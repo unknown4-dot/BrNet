@@ -20,3 +20,16 @@ int main()
 
 i will add 1-2 features everyday until i hit 1000 lines jus to master C🥀
 
+
+1: fixed memory leak in src function
+2: made 1 feature called status it gives you url response status
+
+an example on how to use status function
+```
+#include "brnet.h"
+
+int main()
+{
+  status("https://example.com");
+}
+```
