@@ -6,6 +6,7 @@
 #include <curl/curl.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/socket.h>
 
 void getip(char *domain)
 {
@@ -13,8 +14,7 @@ void getip(char *domain)
     host = gethostbyname(domain);
     if (host == NULL)
     {
-        printf("IP: NULL\n");
-        return;
+        printf("ip: NULL");
     }
     printf("IP: %s\n", inet_ntoa(*(struct in_addr *)host->h_addr));
 }
@@ -35,37 +35,45 @@ size_t write_callback(void *contents, size_t size, size_t nmemb, void *userp)
 
     return total_size;
 }
-
 void src(char *url)
 {
     CURL *curl;
     CURLcode res;
     char *response = NULL;
-
     curl_global_init(CURL_GLOBAL_DEFAULT);
     curl = curl_easy_init();
-
     if (curl)
     {
         curl_easy_setopt(curl, CURLOPT_URL, url);
+
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); // Follow redirects
-
         res = curl_easy_perform(curl);
 
-        if (res == CURLE_OK && response)
+        if (response)
         {
             printf("%s\n", response);
-        }
-        else
-        {
-            fprintf(stderr, "Failed to fetch %s: %s\n", url, curl_easy_strerror(res));
+            free(response);
         }
 
         curl_easy_cleanup(curl);
-        free(response);
+    }
+}
+
+void status(char *url)
+{
+  CURL *curl = curl_easy_init();
+  if(curl) {
+    CURLcode result;
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+    curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);
+    result = curl_easy_perform(curl);
+    if(result == CURLE_OK) {
+      long response_code;
+      curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+      printf("%status: ld\n", response_code);
     }
 
-    curl_global_cleanup();
+    curl_easy_cleanup(curl);
+   }
 }
