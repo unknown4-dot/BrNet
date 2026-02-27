@@ -71,9 +71,14 @@ void status(char *url)
     if(result == CURLE_OK) {
       long response_code;
       curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-      printf("%status: ld\n", response_code);
+      printf("status: %ld\n", response_code);
     }
 
     curl_easy_cleanup(curl);
    }
+}
+
+void localhost()
+{
+  system("python -m http.server 8080");
 }
