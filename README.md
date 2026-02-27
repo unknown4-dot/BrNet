@@ -33,3 +33,16 @@ int main()
   status("https://example.com");
 }
 ```
+
+fixed a bug in line 74-75
+and added another really simple feature that makes you a localhost
+
+a example on how to use it
+```
+#include "brnet.h"
+
+int main()
+{
+  localhost();
+}
+```
